@@ -23,6 +23,10 @@ const adminMiddleware = async (req,res,next)=>{
         // find the user if id present in token
         const result = await User.findOne({_id})
 
+        
+        if(payload.role != "admin")
+            throw new Error("Invalid Token")
+
         if(!result){
             throw new Error("User doesnt exist")
         }

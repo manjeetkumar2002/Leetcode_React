@@ -103,7 +103,7 @@ const logout = async (req,res)=>{
 const getProfile = async (req,res)=>{
 
 }
-
+// admin can register a user as a admin or user
 const adminRegister = async (req,res)=>{
     // user will give you firstName,emailId,password( these 3 are required fields), you have to store them in db
     try{
@@ -115,7 +115,6 @@ const adminRegister = async (req,res)=>{
 
         // hash the password before storing into database (use bcrypt library)
         req.body.password = await bcrypt.hash(password,10) // 10 is no of hashing rounds
-        req.body.role = "admin" // register the admin
         
         // store in db
         const user =  await User.create(req.body)
@@ -123,7 +122,7 @@ const adminRegister = async (req,res)=>{
         // send a token to user and store emailId in the token
         // we require a key for sign the token 
         // we can generate a randome jwt key using the  command
-        const token = jwt.sign({_id:user._id,role:"user",emailId:emailId},process.env.JWT_KEY,{expiresIn:60*60})
+        const token = jwt.sign({_id:user._id,role:user.role,emailId:emailId},process.env.JWT_KEY,{expiresIn:60*60})
 
         // store the token into cookie
         res.cookie("token",token,{maxAge:60*60*1000}) // maxAge is expire time of cookie in milliseconds
@@ -136,4 +135,4 @@ const adminRegister = async (req,res)=>{
     }
 }
 
-module.exports = {register,login,logout,getProfile}
+module.exports = {register,login,logout,getProfile,adminRegister}

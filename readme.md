@@ -44,5 +44,5 @@ step3 : send the null token value into cookies and expire it instantly
 
 # admin middleware 
 <!-- same code as user Middleware add this extra line -->
-  if(payload.role != "admin")
-            throw new Error("Invalid Token")
+if(payload.role != "admin")
+  throw new Error("Invalid Token")
