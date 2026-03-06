@@ -33,7 +33,7 @@ const problemSchema = new Schema({
                 type:String,
                 required:true
             },
-            explanation:{
+            explaination:{
                 type:String,
                 required:true
             }
@@ -58,7 +58,7 @@ const problemSchema = new Schema({
                 type:String,
                 required:true
             },
-            initalCode:{
+            initialCode:{
                 type:String,
                 required:true
             }

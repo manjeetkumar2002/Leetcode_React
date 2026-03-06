@@ -36,12 +36,12 @@ const createProblem = async (req, res) => {
         }})
         // submit the batch
         const submitResult = await submitBatch(submissions) // it return array of tokens  (//step : create a submission Batch)
-
+        console.log("submit result :",submitResult)
         // (get a submission batch (we get the actual result with the help of this tokens))
         const resultToken = submitResult.map((value)=>value.token) // making a array of tokens values ['token1value','token2value']
         // submit the tokens
-        const testResult = submitToken(resultToken)
-
+        const testResult = await submitToken(resultToken)
+        console.log("TestResult",testResult)
         //  now we get the submission result now check the status id
         for(const test of testResult){
           // status_id 3 means accepted
@@ -52,14 +52,135 @@ const createProblem = async (req, res) => {
    }
 
   //we can store the problem to db now when for loop completed 
-  await Problem.create({
+  const userProblem = await Problem.create({
     ...req.body,
     problemCreator:req.result._id
    })
-    
+    res.status(201).send("Problem Saved Successfully")
   } catch (err) {
     res.status(400).send("Error : "+err)
   }
 };
 
-module.exports =  {createProblem}
+
+const updateProblem = async (req,res)=>{
+  // same as createProblem we have to check the code it is correct or not using judge0
+  const {id} = req.params // id of the problem we have to update
+  const {
+      title,
+      description,
+      difficulty,
+      tags,
+      visibleTestCases,
+      hiddenTestCases,
+      startCode,
+      problemCreator,
+      referenceSolution,
+    } = req.body;
+  try {
+    if(!id){
+      return res.status(400).send("Missing Id Field")
+    }
+
+    const DsaProblem = await Problem.findById(id)
+    if(!DsaProblem){
+      return res.status(404).send("Id is not present in server")
+    }
+     // iterate the reference solution array (it have complete code for all languages)
+    for(const {language,completeCode} of referenceSolution){
+        // we provide lang ,completecode ,input,output to judge0
+
+        // format of data we have to send to judge0 => {source_code,language_id,stdin,expected_output}
+        const languageId = getLanguageById(language)
+        //create the submission array of each language (batch creation)
+        const submissions = visibleTestCases.map((testcase)=>{
+            return{ 
+                source_code:completeCode,
+                language_id:languageId,
+                stdin:testcase.input,
+                expected_output:testcase.output
+        }})
+        // submit the batch
+        const submitResult = await submitBatch(submissions) // it return array of tokens  (//step : create a submission Batch)
+        console.log("submit result :",submitResult)
+        // (get a submission batch (we get the actual result with the help of this tokens))
+        const resultToken = submitResult.map((value)=>value.token) // making a array of tokens values ['token1value','token2value']
+        // submit the tokens
+        const testResult = await submitToken(resultToken)
+        console.log("TestResult",testResult)
+        //  now we get the submission result now check the status id
+        for(const test of testResult){
+          // status_id 3 means accepted
+          if(test.status_id!=3){
+            return res.status(400).send("Error Occured")
+          }
+        }
+    }
+
+    const newProblem = await Problem.findByIdAndUpdate(id,{...req.body},{runValidators:true,new:true}) // new:true help to return the newProblem
+
+    res.status(200).send(newProblem);
+  } catch (err) {
+    res.status(500).send("Error : "+err)
+  }
+}
+const deleteProblem = async(req,res)=>{
+    const {id} = req.params
+
+    try {
+      if(!id){
+       return res.status(400).send("Id is Missing")
+      }
+
+      const deleteProblem = await Problem.findByIdAndDelete(id)
+      
+      if(!deleteProblem){
+        return res.status(404).send("Problem is Missing")
+      }
+      res.status(200).send("Problem Deleted Successfully")
+    } catch (err) {
+      res.status(400).send("Error : "+err)
+    }
+}
+const getProblemById = async(req,res)=>{
+    const {id} = req.params
+
+    try {
+      if(!id){
+       return res.status(400).send("Id is Missing")
+      }
+
+      const getproblem = await Problem.findById(id)
+      
+      if(!getproblem){
+        return res.status(404).send("Problem is Missing")
+      }
+      res.status(200).send(getproblem)
+    } catch (err) {
+      res.status(400).send("Error : "+err)
+    }
+}
+const getAllProblem = async(req,res)=>{
+    try {
+      // pagination
+      // const page = 2
+      // const limit = 10
+      // const skip = (page-1) * limit
+
+      // const getAllProblem = Problem.find({}).skip(skip).limit(limit)
+      // const getAllProblem = Problem.find({difficulty:'easy'}) //fileration
+      const getAllProblem = Problem.find({})
+
+      if(getAllProblem.length==0){
+        return res.status(404).send("Problem is Missing")
+      }
+
+      res.status(200).send(getAllProblem)
+    } catch (err) {
+      res.status(400).send("Error : "+err)
+    }
+}
+const solvedAllProblemByUser = ()=>{
+
+}
+module.exports =  {solvedAllProblemByUser,getAllProblem,createProblem,updateProblem,deleteProblem,getProblemById}

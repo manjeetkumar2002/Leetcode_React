@@ -46,3 +46,11 @@ step3 : send the null token value into cookies and expire it instantly
 <!-- same code as user Middleware add this extra line -->
 if(payload.role != "admin")
   throw new Error("Invalid Token")
+
+
+# problem creation steps (storing a dsa problem in database problem schema)
+step1 : admin send the data of the problem ie its title ,description,visibleTestCases etc
+step2 : before storing the problem into db we have to check it is correct or not ie its code , input,output
+step3 : create a submission batch and send it to judge0 its return the tokens for each batch
+<!-- submission batch is array of objects {language_id,source_code,stdin,expected_output} -->
+step4 : submiting a batch is a two steps process first we submit the batch and its return the token

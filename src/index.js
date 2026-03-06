@@ -4,6 +4,7 @@ require("dotenv").config();
 const cookieParser = require("cookie-parser");
 // importing router
 const authRouter = require("./routes/userAuth");
+const problemRouter = require("./routes/problemCreator")
 const redisClient = require("./config/redis");
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(cookieParser())
 
 // userAuth apis
 app.use("/user",authRouter) 
+app.use("/problem",problemRouter) 
 
 
 // we will connect to both mongodb and redis and then we listen to server

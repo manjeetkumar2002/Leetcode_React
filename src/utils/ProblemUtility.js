@@ -1,44 +1,89 @@
-const axios = require("axios")
+const axios = require("axios");
 
-const getLanguageById = (lang) =>{
-    const language = {
-        "c++":54,
-        "java":62,
-        "javascript":63
+const getLanguageById = (lang) => {
+  console.log(lang)
+  const language = {
+    "c++": 54,
+    "java": 62,
+    "javascript": 63,
+  };
+  return language[lang.toLowerCase()];
+};
+
+const submitBatch = async (submissions) => {
+  // you get this code snippet in (create a batch submission code ) on judge0
+  const options = {
+    method: "POST",
+    url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
+    params: {
+      base64_encoded: "false",
+    },
+    headers: {
+      "x-rapidapi-key": "6da88f6de9mshf1f75c11a691142p156adbjsn8d906b42026a",
+      "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+      "Content-Type": "application/json",
+    },
+    data: {
+      // send the submission
+      submissions,
+    },
+  };
+
+  async function fetchData() {
+    try {
+      const response = await axios.request(options);
+      return response.data;
+    } catch (error) {
+      console.error(error);
     }
-    return language[lang.toLowerCase()]
+  }
+
+  return await fetchData();
+};
+
+// wait for 1 sec
+const waiting = async (timer)=>{
+  setTimeout(()=>{return 1},timer)
 }
 
-const submitBatch = async (submissions) =>{
+const submitToken = async (resultToken) => {
+  // get a batch submission code
+  const options = {
+    method: "GET",
+    url: "https://judge0-ce.p.rapidapi.com/submissions/batch",
+    params: {
+      // send the tokens in string comma separated
+      tokens: resultToken.join(","),
+      base64_encoded: "false",
+      fields: "*",
+    },
+    headers: {
+      "x-rapidapi-key": "6da88f6de9mshf1f75c11a691142p156adbjsn8d906b42026a",
+      "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
+    },
+  };
 
-    // you get this code snippet in create batch submission on judge0
-    const options = {
-  method: 'POST',
-  url: 'https://judge0-ce.p.rapidapi.com/submissions/batch',
-  params: {
-    base64_encoded: 'true'
-  },
-  headers: {
-    'x-rapidapi-key': '6da88f6de9mshf1f75c11a691142p156adbjsn8d906b42026a',
-    'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
-    'Content-Type': 'application/json'
-  },
-  data: {
-    // send the submission
-    submissions
+  async function fetchData() {
+    try {
+      const response = await axios.request(options);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  // call the until you get the data
+  while (true) {
+    const result = await fetchData();
+    // if status_id is < 3 then we have to call this again 1 means in queue ,2 means pending
+
+    const isResultObtained = result.submissions.every((r) => r.status_id > 2);
+
+    if (isResultObtained) {
+      return result.submissions;
+    }
+    // wait for 1 seconds then call fetchdata again
+    waiting(1000);
   }
 };
 
-async function fetchData() {
-	try {
-		const response = await axios.request(options);
-		return response.data
-	} catch (error) {
-		console.error(error);
-	}
-}
-
-return await fetchData();
-}
-
-module.exports = {getLanguageById,submitBatch}
+module.exports = { getLanguageById, submitBatch, submitToken };
