@@ -42,7 +42,7 @@ const userSchema = new Schema({
         type:[String],
     } 
 },{timestamps:true})
-
+// user is name of the model
 const User = new mongoose.model("user",userSchema)
 
 

@@ -51,6 +51,37 @@ const problemSchema = new Schema({
             },
         }
     ]
+    ,
+    startCode:[
+        {
+            language:{
+                type:String,
+                required:true
+            },
+            initalCode:{
+                type:String,
+                required:true
+            }
+        }
+    ],
+    problemCreator:{
+        // we can store the object id of the admin
+        type:Schema.Types.ObjectId,
+        ref:'user', // reference is user schema
+        required:true
+    },
+    referenceSolution:[
+        {
+            language:{
+                type:String,
+                required:true
+            },
+            completeCode:{
+                type:String,
+                required:true
+            }
+        }
+    ]
 })
 
 
