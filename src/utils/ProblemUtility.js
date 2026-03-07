@@ -1,7 +1,6 @@
 const axios = require("axios");
 
 const getLanguageById = (lang) => {
-  console.log(lang)
   const language = {
     "c++": 54,
     "java": 62,
@@ -19,7 +18,7 @@ const submitBatch = async (submissions) => {
       base64_encoded: "false",
     },
     headers: {
-      "x-rapidapi-key": "6da88f6de9mshf1f75c11a691142p156adbjsn8d906b42026a",
+      "x-rapidapi-key": process.env.JUDGE0_API ,
       "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
       "Content-Type": "application/json",
     },
@@ -58,7 +57,7 @@ const submitToken = async (resultToken) => {
       fields: "*",
     },
     headers: {
-      "x-rapidapi-key": "6da88f6de9mshf1f75c11a691142p156adbjsn8d906b42026a",
+      "x-rapidapi-key": process.env.JUDGE0_API,
       "x-rapidapi-host": "judge0-ce.p.rapidapi.com",
     },
   };

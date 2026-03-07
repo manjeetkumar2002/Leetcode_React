@@ -36,12 +36,11 @@ const createProblem = async (req, res) => {
         }})
         // submit the batch
         const submitResult = await submitBatch(submissions) // it return array of tokens  (//step : create a submission Batch)
-        console.log("submit result :",submitResult)
+       
         // (get a submission batch (we get the actual result with the help of this tokens))
         const resultToken = submitResult.map((value)=>value.token) // making a array of tokens values ['token1value','token2value']
         // submit the tokens
         const testResult = await submitToken(resultToken)
-        console.log("TestResult",testResult)
         //  now we get the submission result now check the status id
         for(const test of testResult){
           // status_id 3 means accepted
@@ -102,12 +101,10 @@ const updateProblem = async (req,res)=>{
         }})
         // submit the batch
         const submitResult = await submitBatch(submissions) // it return array of tokens  (//step : create a submission Batch)
-        console.log("submit result :",submitResult)
         // (get a submission batch (we get the actual result with the help of this tokens))
         const resultToken = submitResult.map((value)=>value.token) // making a array of tokens values ['token1value','token2value']
         // submit the tokens
         const testResult = await submitToken(resultToken)
-        console.log("TestResult",testResult)
         //  now we get the submission result now check the status id
         for(const test of testResult){
           // status_id 3 means accepted
@@ -143,6 +140,7 @@ const deleteProblem = async(req,res)=>{
     }
 }
 const getProblemById = async(req,res)=>{
+  // don't send the hiddenTestCases,referenceSolution,problemCreator,__v  of the problem to the user
     const {id} = req.params
 
     try {
@@ -150,7 +148,7 @@ const getProblemById = async(req,res)=>{
        return res.status(400).send("Id is Missing")
       }
 
-      const getproblem = await Problem.findById(id)
+      const getproblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases startCode')
       
       if(!getproblem){
         return res.status(404).send("Problem is Missing")
@@ -169,7 +167,7 @@ const getAllProblem = async(req,res)=>{
 
       // const getAllProblem = Problem.find({}).skip(skip).limit(limit)
       // const getAllProblem = Problem.find({difficulty:'easy'}) //fileration
-      const getAllProblem = Problem.find({})
+      const getAllProblem = await Problem.find({}).select("_id title difficulty tags")
 
       if(getAllProblem.length==0){
         return res.status(404).send("Problem is Missing")

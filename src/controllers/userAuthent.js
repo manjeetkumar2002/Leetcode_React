@@ -87,7 +87,6 @@ const logout = async (req,res)=>{
         const {token} = req.cookies
         //  we fetch the payload because it have the token expiry date
         const payload = jwt.decode(token)
-        console.log(payload)
         await redisClient.set(`token:${token}`,"Blocked")
         //  set the expiry of token
         await redisClient.expireAt(`token:${token}`,payload.exp)

@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 // importing router
 const authRouter = require("./routes/userAuth");
 const problemRouter = require("./routes/problemCreator")
+const submitRouter = require("./routes/submit")
 const redisClient = require("./config/redis");
 
 const app = express();
@@ -15,7 +16,7 @@ app.use(cookieParser())
 // userAuth apis
 app.use("/user",authRouter) 
 app.use("/problem",problemRouter) 
-
+app.use("/submission",submitRouter)
 
 // we will connect to both mongodb and redis and then we listen to server
 
