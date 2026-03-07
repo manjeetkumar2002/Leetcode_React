@@ -1,6 +1,6 @@
 const express = require("express")
 // import controllers 
-const {register,login,logout,getProfile,adminRegister} = require("../controllers/userAuthent")
+const {register,login,logout,getProfile,adminRegister,deleteProfile} = require("../controllers/userAuthent")
 const userMiddleware = require("../middleware/userMiddleware")
 const adminMiddleware = require("../middleware/adminMiddleware")
 
@@ -15,8 +15,7 @@ authRouter.post("/login",login)
 // // we can create a usermiddleware for validating the token because we will use it somewhere else also
 authRouter.post("/logout",userMiddleware,logout)
 authRouter.get("/getProfile",getProfile)
-
-
+authRouter.delete("/deleteProfile",userMiddleware,deleteProfile)
 //  admin register route
 //  only a admin can register a admin , so we create the adminMiddleware
 authRouter.post("/admin/register",adminMiddleware,adminRegister)

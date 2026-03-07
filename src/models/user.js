@@ -49,6 +49,17 @@ const userSchema = new Schema({
         unique:true
     } 
 },{timestamps:true})
+
+// postMethod for deleteing the submission of the user when he delte the profile (ye function baad me chalega jab profile delete hoga )
+// ye post function tab chalega jab delete command chalega ie (findOneAndDelete)
+// jab ham user ko delete karenge tab mongodb us user ko return karega doc me you can rename it to userInfo
+userSchema.post('findOneAndDelete',async function (doc){
+    if(doc){
+        await mongoose.model('submission').deleteMany({userId:doc._id});
+    }
+})
+
+
 // user is name of the model
 const User = new mongoose.model("user",userSchema)
 

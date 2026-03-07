@@ -4,7 +4,7 @@ const User = require("../models/user")
 const validate = require("../utils/validator")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-
+const Submission = require("../models/submission")
 
 const register = async (req,res)=>{
     // user will give you firstName,emailId,password( these 3 are required fields), you have to store them in db
@@ -134,4 +134,18 @@ const adminRegister = async (req,res)=>{
     }
 }
 
-module.exports = {register,login,logout,getProfile,adminRegister}
+
+const deleteProfile = async(req,res)=>{
+    try{
+        const userId = req.result._id
+        await User.findByIdAndDelete(userId)
+        // delete the submission of the user also
+        await Submission.deleteMany({userId})
+        res.status(200).send("Profile Deleted successfully")
+    }
+    catch(err){
+         res.status(500).send("Internal Server Error")
+    }
+}
+
+module.exports = {register,login,logout,getProfile,adminRegister,deleteProfile}
