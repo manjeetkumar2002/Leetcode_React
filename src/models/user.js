@@ -39,7 +39,14 @@ const userSchema = new Schema({
     },
     problemSolved:{
         // array of strings
-        type:[String],
+        type:[
+            // store the problem id of the problems solved by the user
+            {
+                type:Schema.Types.ObjectId,
+                ref:'problem'
+            }
+        ],
+        unique:true
     } 
 },{timestamps:true})
 // user is name of the model

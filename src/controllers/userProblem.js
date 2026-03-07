@@ -1,4 +1,6 @@
 const Problem = require("../models/Problem");
+const User = require("../models/user");
+
 const {getLanguageById,submitBatch,submitToken} = require("../utils/ProblemUtility");
 
 const createProblem = async (req, res) => {
@@ -178,7 +180,27 @@ const getAllProblem = async(req,res)=>{
       res.status(400).send("Error : "+err)
     }
 }
-const solvedAllProblemByUser = ()=>{
+const solvedAllProblemByUser = async(req,res)=>{
+    try{
+      // const count = req.result.problemSolved.length
+      // res.status(200).send(count)
 
+
+      const userId = req.result._id
+      // jisko problemSolved refer kar raha uska ka data fetch ho jayega populate ke help se (this is same as join operation)
+      // const user = await User.findById(userId).populate("problemSolved")
+      const user = await User.findById(userId).populate({
+        path:"problemSolved",
+        // select only some field
+        select:"_id title difficulty tags"
+      })
+
+
+      res.status(200).send(user.problemSolved)
+
+    }
+    catch(err){
+      res.status(500).send("Error : "+err)
+    }
 }
 module.exports =  {solvedAllProblemByUser,getAllProblem,createProblem,updateProblem,deleteProblem,getProblemById}

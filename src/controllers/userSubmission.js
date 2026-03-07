@@ -95,5 +95,40 @@ const submitCode = async(req,res)=>{
     }
 
 }
+// same code as submit code but we dont have to saved it in db
+const runCode = async(req,res)=>{
+    try {
+        const userId = req.result._id // user id
+        const problemId = req.params.id // problemID
+        const {code,language} = req.body
+        if(!code || !language || !userId || !problemId)
+            return res.status(404).send("Some Field Missing")
 
-module.exports = {submitCode}
+
+        const problem = await Problem.findById(problemId)
+        const languageId = getLanguageById(language)
+        //create the submission array of each language (batch creation)
+        const submissions = problem.visibleTestCases.map((testcase)=>{
+            return{ 
+                source_code:code,
+                language_id:languageId,
+                stdin:testcase.input,
+                expected_output:testcase.output
+        }})
+        // submit the batch
+        const submitResult = await submitBatch(submissions) // it return array of tokens  (//step : create a submission Batch)
+        // (get a submission batch (we get the actual result with the help of this tokens))
+        const resultToken = submitResult.map((value)=>value.token) // making a array of tokens values ['token1value','token2value']
+        // submit the tokens
+        const testResult = await submitToken(resultToken)
+        
+        res.status(201).send(testResult)
+
+
+    } catch (err) {
+         res.status(500).send("Internal Server Error :"+err)
+    }
+}
+
+
+module.exports = {submitCode,runCode}
