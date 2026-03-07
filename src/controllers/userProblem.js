@@ -182,13 +182,17 @@ const getAllProblem = async(req,res)=>{
 }
 const solvedAllProblemByUser = async(req,res)=>{
     try{
+      // sending the number of problems Solved
       // const count = req.result.problemSolved.length
       // res.status(200).send(count)
 
 
       const userId = req.result._id
+      // sending all the fields of the ProblemSolved
       // jisko problemSolved refer kar raha uska ka data fetch ho jayega populate ke help se (this is same as join operation)
       // const user = await User.findById(userId).populate("problemSolved")
+     
+      // sending only selected fields to the user 
       const user = await User.findById(userId).populate({
         path:"problemSolved",
         // select only some field
@@ -203,4 +207,21 @@ const solvedAllProblemByUser = async(req,res)=>{
       res.status(500).send("Error : "+err)
     }
 }
-module.exports =  {solvedAllProblemByUser,getAllProblem,createProblem,updateProblem,deleteProblem,getProblemById}
+
+const submittedProblem = async(req,res)=>{
+    try {
+      const userId = req.result._id
+      const problemId = req.params.pid
+      const ans = await Submission.find({userId,problemId})
+
+      if(ans.length == 0){
+        res.send(200).send("No Submission is present")
+      }
+
+      res.status(200).send(ans)
+    } catch (err) {
+       res.status(500).send("Error : "+err)
+    }
+}
+
+module.exports =  {solvedAllProblemByUser,getAllProblem,createProblem,updateProblem,deleteProblem,getProblemById,submittedProblem}

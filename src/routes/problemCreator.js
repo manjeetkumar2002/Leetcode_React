@@ -14,6 +14,7 @@ const {
   getProblemById,
   getAllProblem,
   solvedAllProblemByUser,
+  submittedProblem
 } = require("../controllers/userProblem");
 const problemRouter = express.Router();
 
@@ -25,5 +26,9 @@ problemRouter.delete("/delete/:id", adminMiddleware, deleteProblem);
 problemRouter.get("/ProblemById/:id", userMiddleware, getProblemById);
 problemRouter.get("/getAllProblem", userMiddleware, getAllProblem);
 problemRouter.get("/problemSolvedByUser",userMiddleware,solvedAllProblemByUser);
+// fetching user submissions for a particular problem
+// we have to create the indexing on {userId,problemId} because their can be 20 crore submission in the db of users
+// indexing make fetching data faster
+problemRouter.get("/submittedProblem/:pid",userMiddleware,submittedProblem)
 
 module.exports = problemRouter;
