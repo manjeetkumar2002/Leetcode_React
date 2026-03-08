@@ -30,8 +30,16 @@ const register = async (req,res)=>{
         // store the token into cookie
         res.cookie("token",token,{maxAge:60*60*1000}) // maxAge is expire time of cookie in milliseconds
 
-
-        res.status(201).send("User Register Successfully!")
+        //sending the data to frontend
+        const reply = {
+            firstName:user.firstName,
+            emailId:user.emailId,
+            _id:user._id
+        }
+        res.status(201).json({
+            user:reply,
+            message:"Register Successfully!"
+        })
     }
     catch (err){
         res.status(400).send("Error : "+err)
@@ -70,8 +78,16 @@ const login = async (req,res)=>{
         // store the token into cookie
         res.cookie("token",token,{maxAge:60*60*1000}) // maxAge is expire time of cookie in milliseconds
 
-
-        res.status(201).send("Logged In Successfully!")
+        // sending the data in json format to frontend
+        const reply = {
+            firstName:user.firstName,
+            emailId:user.emailId,
+            _id:user._id
+        }
+        res.status(201).json({
+            user:reply,
+            message:"Logged In Successfully!"
+        })
 
     }
     catch (err){

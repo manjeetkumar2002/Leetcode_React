@@ -26,13 +26,16 @@ const Signup = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen w-full p-2">
-    <form className="bg-base-100 shadow-xl flex card w-96 border-2 p-7 flex-col justify-center items-center gap-5" onSubmit={handleSubmit(submittedData)}>
-      <h3 className="text-3xl text-white font-bold">Leetcode</h3>
-      <input  className="input" placeholder="John" {...register("firstName",{ required: true })} />
+    <form className="bg-base-100 shadow-xl flex card w-96 border-2 p-7 flex-col gap-5" onSubmit={handleSubmit(submittedData)}>
+      <h3 className="text-center text-3xl text-white font-bold">Leetcode</h3>
+      <label className="mb-0" for="name">Name</label>
+      <input id="name"  className="input" placeholder="John" {...register("firstName",{ required: true })} />
       {errors.firstName && (<p className="text-error">{errors.firstName.message}</p>)}
-      <input className="input"  placeholder="John@gmail.com" {...register("emailId", { required: true })} />
+      <label className="mb-0" for="emailId">Email</label>
+      <input id="emailId" className="input"  placeholder="John@gmail.com" {...register("emailId", { required: true })} />
       {errors.emailId &&(<p className="text-error">{errors.emailId.message}</p>)}
-      <input className="input"  placeholder="John@123" {...register("password")} />
+      <label className="mb-0" for="password">Password</label>
+      <input id="password" className="input"  placeholder="John@123" {...register("password")} />
       {errors.password && (<p className="text-error">{errors.password.message}</p>)}
       <input className="btn btn-primary" type="submit" value="Sign Up"/>
     </form> 

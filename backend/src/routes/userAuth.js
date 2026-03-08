@@ -19,5 +19,15 @@ authRouter.delete("/deleteProfile",userMiddleware,deleteProfile)
 //  admin register route
 //  only a admin can register a admin , so we create the adminMiddleware
 authRouter.post("/admin/register",adminMiddleware,adminRegister)
-
+authRouter.get("/check",userMiddleware,(req,res)=>{
+    const reply = {
+        firstName:req.result.firstName,
+        emailId:req.result.emailId,
+        _id:req.result._id
+    }
+    res.status(200).json({
+        user:reply,
+        message:"valid user"
+    })
+})
 module.exports = authRouter
