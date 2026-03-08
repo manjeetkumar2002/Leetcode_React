@@ -51,7 +51,7 @@ const userSchema = new Schema({
 },{timestamps:true})
 
 // postMethod for deleteing the submission of the user when he delte the profile (ye function baad me chalega jab profile delete hoga )
-// ye post function tab chalega jab delete command chalega ie (findOneAndDelete)
+// ye post function tab chalega jab delete command chalega ie (findByIdAndDelete) ,in mongodb it is findOneAndDelete
 // jab ham user ko delete karenge tab mongodb us user ko return karega doc me you can rename it to userInfo
 userSchema.post('findOneAndDelete',async function (doc){
     if(doc){

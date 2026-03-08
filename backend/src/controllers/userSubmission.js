@@ -4,8 +4,6 @@ const User = require("../models/user")
 const {getLanguageById,submitBatch,submitToken} = require("../utils/ProblemUtility")
 const submitCode = async(req,res)=>{
     // run the code using judge0 and submit it on db with userId and problemId
-    
-    
     try {
         //  user send this info
         const userId = req.result._id // user id

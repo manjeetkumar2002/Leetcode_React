@@ -49,7 +49,7 @@ const submissionSchema = new Schema({
 }, { 
   timestamps: true
 });
-
+// 1 means ascending order ,-1 means descending order
 submissionSchema.index({userId:1 , problemId:1}); // creating indexing on userId and problemId for submittedproblem api , so that this operation take less time
 const Submission = mongoose.model('submission',submissionSchema);
 

@@ -100,7 +100,12 @@ const logout = async (req,res)=>{
 }
 
 const getProfile = async (req,res)=>{
-
+    try{
+        res.status(200).send(req.result)
+    }
+    catch(err){
+        res.send(500).send("Error : "+err)
+    }
 }
 // admin can register a user as a admin or user
 const adminRegister = async (req,res)=>{
@@ -140,7 +145,9 @@ const deleteProfile = async(req,res)=>{
         const userId = req.result._id
         await User.findByIdAndDelete(userId)
         // delete the submission of the user also
-        await Submission.deleteMany({userId})
+        // method1
+        // await Submission.deleteMany({userId})
+        // method 2 code is in User Model
         res.status(200).send("Profile Deleted successfully")
     }
     catch(err){
