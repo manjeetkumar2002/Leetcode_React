@@ -7,12 +7,18 @@ const authRouter = require("./routes/userAuth");
 const problemRouter = require("./routes/problemCreator")
 const submitRouter = require("./routes/submit")
 const redisClient = require("./config/redis");
+// cors issue solution
+const cors = require("cors")
+
 
 const app = express();
 // parsing req.body and cookie data into js object
 app.use(express.json())
 app.use(cookieParser())
-
+app.use(cors({
+  origin:"http://localhost:5173",
+  credentials:true
+}))
 // userAuth apis
 app.use("/user",authRouter) 
 app.use("/problem",problemRouter) 

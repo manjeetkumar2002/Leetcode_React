@@ -43,10 +43,10 @@ const userSchema = new Schema({
             // store the problem id of the problems solved by the user
             {
                 type:Schema.Types.ObjectId,
-                ref:'problem'
+                ref:'problem',
+                unique:true
             }
-        ],
-        unique:true
+        ]
     } 
 },{timestamps:true})
 
@@ -58,7 +58,6 @@ userSchema.post('findOneAndDelete',async function (doc){
         await mongoose.model('submission').deleteMany({userId:doc._id});
     }
 })
-
 
 // user is name of the model
 const User = new mongoose.model("user",userSchema)

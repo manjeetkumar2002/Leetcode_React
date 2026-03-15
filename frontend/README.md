@@ -25,3 +25,9 @@ npm i @hookform/resolvers
         message:"Invalid Email"
     }
 }
+
+# store 
+1.user Info
+2.loading
+3.isAuthenticated:bool value => if user is not authenticated we route him to signup or login page using this variable
+4.error
