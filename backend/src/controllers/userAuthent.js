@@ -34,7 +34,8 @@ const register = async (req,res)=>{
         const reply = {
             firstName:user.firstName,
             emailId:user.emailId,
-            _id:user._id
+            _id:user._id,
+            role:user.role,
         }
         res.status(201).json({
             user:reply,
@@ -58,7 +59,7 @@ const login = async (req,res)=>{
         if(!password){
             throw new Error("Invalid Credentails")
         }
-
+        
         // fetch the user from db using its emailId
         const user = await User.findOne({emailId})
 
@@ -66,9 +67,9 @@ const login = async (req,res)=>{
         if(!user){
             throw new Error("Invalid Credentails")
         }
-
-        const isMatch = await bcrypt.compare(password,user.password)
-
+        
+        const isMatch = await bcrypt.compare(req.body.password,user.password)
+       
         if(!isMatch){
             throw new Error("Invalid Credentials password")
         }
@@ -83,12 +84,15 @@ const login = async (req,res)=>{
         const reply = {
             firstName:user.firstName,
             emailId:user.emailId,
+            role:user.role,
             _id:user._id
         }
+        
         res.status(201).json({
             user:reply,
             message:"Logged In Successfully!"
         })
+        
 
     }
     catch (err){

@@ -8,10 +8,6 @@ export const registerUser = createAsyncThunk(
     const response =  await axiosClient.post('/user/register', userData);
     return response.data.user;
     } catch (error) {
-      console.log(error)
-       if(error.response.status === 400){
-        return rejectWithValue(null)
-      }
       return rejectWithValue(error);
     }
   }
@@ -25,9 +21,6 @@ export const loginUser = createAsyncThunk(
       const response = await axiosClient.post('/user/login', credentials);
       return response.data.user;
     } catch (error) {
-       if(error.response.status === 401){
-        return rejectWithValue(null)
-      }
       return rejectWithValue(error);
     }
   }
@@ -40,8 +33,8 @@ export const checkAuth = createAsyncThunk(
       const { data } = await axiosClient.get('/user/check');
       return data.user;
     } catch (error) {
-      if(error.response.status === 401){
-        return rejectWithValue(null)
+      if (error.response?.status === 401) {
+        return rejectWithValue(null); // Special case for no session
       }
       return rejectWithValue(error);
     }
@@ -52,7 +45,7 @@ export const logoutUser = createAsyncThunk(
   'auth/logout',
   async (_, { rejectWithValue }) => {
     try {
-      await axiosClient.post('/logout');
+      await axiosClient.post('/user/logout');
       return null;
     } catch (error) {
       return rejectWithValue(error);

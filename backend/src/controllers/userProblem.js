@@ -1,11 +1,11 @@
 const Problem = require("../models/Problem");
 const User = require("../models/user");
-
+const Submission = require("../models/submission")
 const {getLanguageById,submitBatch,submitToken} = require("../utils/ProblemUtility");
 
 const createProblem = async (req, res) => {
   // admin send the details of problem and we have to store it in db
-
+  console.log(req.body)
   const {
     title,
     description,
@@ -38,7 +38,7 @@ const createProblem = async (req, res) => {
         }})
         // submit the batch
         const submitResult = await submitBatch(submissions) // it return array of tokens  (//step : create a submission Batch)
-       
+        
         // (get a submission batch (we get the actual result with the help of this tokens))
         const resultToken = submitResult.map((value)=>value.token) // making a array of tokens values ['token1value','token2value']
         // submit the tokens
@@ -59,10 +59,10 @@ const createProblem = async (req, res) => {
    })
     res.status(201).send("Problem Saved Successfully")
   } catch (err) {
+    console.log(err)
     res.status(400).send("Error : "+err)
   }
-};
-
+}
 
 const updateProblem = async (req,res)=>{
   // same as createProblem we have to check the code it is correct or not using judge0
@@ -198,7 +198,7 @@ const solvedAllProblemByUser = async(req,res)=>{
         // select only some field
         select:"_id title difficulty tags"
       })
-
+      console.log("solvedProblems:",user.problemSolved)
 
       res.status(200).send(user.problemSolved)
 
@@ -213,11 +213,6 @@ const submittedProblem = async(req,res)=>{
       const userId = req.result._id
       const problemId = req.params.pid
       const ans = await Submission.find({userId,problemId})
-
-      if(ans.length == 0){
-        res.send(200).send("No Submission is present")
-      }
-
       res.status(200).send(ans)
     } catch (err) {
        res.status(500).send("Error : "+err)

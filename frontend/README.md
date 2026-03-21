@@ -1,33 +1,18 @@
-# install vite
-npm create vite@latest
+# React + Vite
 
-# install daisy ui 
-npm install tailwindcss@latest @tailwindcss/vite@latest daisyui@latest
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-# react-hook-form
-npm i react-hook-form
+Currently, two official plugins are available:
 
-# zod : use for validation in form
-npm i zod
-for using zod u need hook form resolver
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-# hook-form-resolver 
-npm i @hookform/resolvers
+## Expanding the ESLint configuration
 
-<!-- errors object format  -->
-{
-    firstName:{
-        type:'minLength'
-        message:"minimum char should be 3"
-    },
-    emaildId:{
-        type:'invalid_string'
-        message:"Invalid Email"
-    }
-}
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
-# store 
-1.user Info
-2.loading
-3.isAuthenticated:bool value => if user is not authenticated we route him to signup or login page using this variable
-4.error
+#include <iostream>
+using namespace std;
+int sum(int a, int b) {
+     return a + b;}
+     int main() {  int a, b;  cin >> a >> b;   cout << sum(a, b);  return 0;}
