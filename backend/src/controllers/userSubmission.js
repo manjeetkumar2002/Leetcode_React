@@ -9,10 +9,9 @@ const submitCode = async(req,res)=>{
         const userId = req.result._id // user id
         const problemId = req.params.id // problemID
         let {code,language} = req.body
-        console.log(code,language)
         if(!code || !language || !userId || !problemId)
             return res.status(404).send("Some Field Missing")
-       
+        
         // fetch the problem from the database so that we get hiddenTestCases because we have to run the code so that we 
         // get the runtime,memory and total testCase run 
 
@@ -42,15 +41,12 @@ const submitCode = async(req,res)=>{
                 stdin:testcase.input,
                 expected_output:testcase.output
         }})
-        // console.log(submissions)
         // submit the batch
         const submitResult = await submitBatch(submissions) // it return array of tokens  (//step : create a submission Batch)
         // (get a submission batch (we get the actual result with the help of this tokens))
         const resultToken = submitResult.map((value)=>value.token) // making a array of tokens values ['token1value','token2value']
         // submit the tokens
         const testResult = await submitToken(resultToken)
-        
-        console.log(testResult)
         // update the submitResult that we have stored in db
         let testCasesPassed = 0
         let runtime = 0;
@@ -90,9 +86,7 @@ const submitCode = async(req,res)=>{
             req.result.problemSolved.push(problemId)
             await req.result.save()
         }
-        console.log(status)
         const accepted = (status == 'accepted')
-        console.log(accepted)
         res.status(201).json({
         accepted,
         totalTestCases: submittedResult.testCasesTotal,

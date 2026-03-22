@@ -7,6 +7,7 @@ const authRouter = require("./routes/userAuth");
 const problemRouter = require("./routes/problemCreator")
 const submitRouter = require("./routes/submit")
 const redisClient = require("./config/redis");
+const aiRouter = require("./routes/aiChatting")
 // cors issue solution
 const cors = require("cors")
 
@@ -23,7 +24,7 @@ app.use(cors({
 app.use("/user",authRouter) 
 app.use("/problem",problemRouter) 
 app.use("/submission",submitRouter)
-
+app.use("/ai",aiRouter)
 // we will connect to both mongodb and redis and then we listen to server
 
 const InitializeConnection = async ()=>{
@@ -42,24 +43,3 @@ const InitializeConnection = async ()=>{
 }
 
 InitializeConnection()
-
-
-
-
-
-
-
-
-
-
-
-
-// main()
-// .then(async() => {
-//   app.listen(process.env.PORT, () => {
-//     console.log("server listening at port number ", process.env.PORT);
-//   })
-// })
-// .catch((err)=>{
-//     console.log("ERROR occured :",err)
-// })

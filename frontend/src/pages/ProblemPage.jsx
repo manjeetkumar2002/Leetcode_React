@@ -4,7 +4,7 @@ import Editor from '@monaco-editor/react';
 import { useParams } from 'react-router';
 import axiosClient from "../utils/axiosClient"
 import SubmissionHistory from "../components/SubmissionHistory"
-
+import ChatAi from '../components/ChatAi';
 const langMap = {
         cpp: 'c++',
         java: 'java',
@@ -33,11 +33,9 @@ const ProblemPage = () => {
       try {
         
         const response = await axiosClient.get(`/problem/ProblemById/${problemId}`);
-        console.log(response.data)
         const initialCode = response?.data?.startCode?.find(sc =>
           sc.language === langMap[selectedLanguage]
         )?.initialCode;
-       
         setProblem(response.data);
         
         setCode(initialCode);
@@ -79,12 +77,10 @@ const ProblemPage = () => {
     setRunResult(null);
     
     try {
-      console.log(code,selectedLanguage)
       const response = await axiosClient.post(`/submission/run/${problemId}`, {
         code,
         language: selectedLanguage
       });
-      console.log("run code :",response.data)
       setRunResult(response.data);
       setLoading(false);
       setActiveRightTab('testcase');
@@ -109,7 +105,6 @@ const ProblemPage = () => {
         code:code,
         language: selectedLanguage
       });
-      console.log("submitted :",response.data)
        setSubmitResult(response.data);
        setLoading(false);
        setActiveRightTab('result');
@@ -149,9 +144,9 @@ const ProblemPage = () => {
   }
 
   return (
-    <div className="h-screen flex bg-base-100">
+    <div className="h-screen flex flex-col md:flex-row bg-base-100">
       {/* Left Panel */}
-      <div className="w-1/2 flex flex-col border-r border-base-300">
+      <div className="w-full md:w-1/2 flex flex-col border-r border-base-300">
         {/* Left Tabs */}
         <div className="tabs tabs-bordered bg-base-200 px-4">
           <button 
@@ -177,6 +172,12 @@ const ProblemPage = () => {
             onClick={() => setActiveLeftTab('submissions')}
           >
             Submissions
+          </button>
+          <button 
+            className={`tab ${activeLeftTab === 'chatAI' ? 'tab-active' : ''}`}
+            onClick={() => setActiveLeftTab('chatAI')}
+          >
+            ChatAI
           </button>
         </div>
 
@@ -231,7 +232,7 @@ const ProblemPage = () => {
                 <div>
                   <h2 className="text-xl font-bold mb-4">Solutions</h2>
                   <div className="space-y-6">
-                    {problem.referenceSolution?.map((solution, index) => (
+                    {problem?.referenceSolution?.map((solution, index) => (
                       <div key={index} className="border border-base-300 rounded-lg">
                         <div className="bg-base-200 px-4 py-2 rounded-t-lg">
                           <h3 className="font-semibold">{problem?.title} - {solution?.language}</h3>
@@ -255,13 +256,21 @@ const ProblemPage = () => {
                   </div>
                 </div>
               )}
+              {activeLeftTab === 'chatAI' && (
+                <div className="prose max-w-none">
+                  <h2 className="text-xl font-bold mb-4">CHAT with AI</h2>
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                    <ChatAi problem={problem}></ChatAi>
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>
       </div>
 
       {/* Right Panel */}
-      <div className="w-1/2 flex flex-col">
+      <div className="w-full md:w-1/2 flex flex-col">
         {/* Right Tabs */}
         <div className="tabs tabs-bordered bg-base-200 px-4">
           <button 

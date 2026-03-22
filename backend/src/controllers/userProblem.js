@@ -5,7 +5,6 @@ const {getLanguageById,submitBatch,submitToken} = require("../utils/ProblemUtili
 
 const createProblem = async (req, res) => {
   // admin send the details of problem and we have to store it in db
-  console.log(req.body)
   const {
     title,
     description,
@@ -59,7 +58,6 @@ const createProblem = async (req, res) => {
    })
     res.status(201).send("Problem Saved Successfully")
   } catch (err) {
-    console.log(err)
     res.status(400).send("Error : "+err)
   }
 }
@@ -150,8 +148,7 @@ const getProblemById = async(req,res)=>{
        return res.status(400).send("Id is Missing")
       }
 
-      const getproblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases startCode')
-      
+      const getproblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases startCode referenceSolution')
       if(!getproblem){
         return res.status(404).send("Problem is Missing")
       }
@@ -198,7 +195,6 @@ const solvedAllProblemByUser = async(req,res)=>{
         // select only some field
         select:"_id title difficulty tags"
       })
-      console.log("solvedProblems:",user.problemSolved)
 
       res.status(200).send(user.problemSolved)
 

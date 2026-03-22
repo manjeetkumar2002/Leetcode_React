@@ -54,3 +54,5 @@ step2 : before storing the problem into db we have to check it is correct or not
 step3 : create a submission batch and send it to judge0 its return the tokens for each batch
 <!-- submission batch is array of objects {language_id,source_code,stdin,expected_output} -->
 step4 : submiting a batch is a two steps process first we submit the batch and its return the token
+
+#  npm i @google/genai
