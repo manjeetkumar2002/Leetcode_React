@@ -2,6 +2,7 @@ const Problem = require("../models/Problem");
 const User = require("../models/user");
 const Submission = require("../models/submission")
 const {getLanguageById,submitBatch,submitToken} = require("../utils/ProblemUtility");
+const SolutionVideo = require("../models/solutionVideo");
 
 const createProblem = async (req, res) => {
   // admin send the details of problem and we have to store it in db
@@ -149,9 +150,21 @@ const getProblemById = async(req,res)=>{
       }
 
       const getproblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases startCode referenceSolution')
+      // fetch the video solution of this problem and send to frontend
+      // we can fetch the video the problem id 
       if(!getproblem){
         return res.status(404).send("Problem is Missing")
       }
+      const videos = await SolutionVideo.find({problemId:id})
+      // if videos exist ,you and also add the feature of paid user here => video&&userPaid
+      if(videos){
+        getproblem.secureUrl = videos.secureUrl
+        getproblem.cloudinaryPublicId = videos.cloudinaryPublicId
+        getproblem.thumbnailUrl = videos.thumbnailUrl
+        getproblem.duration = videos.duration
+        return res.status(200).send(getproblem)
+      }
+
       res.status(200).send(getproblem)
     } catch (err) {
       res.status(400).send("Error : "+err)

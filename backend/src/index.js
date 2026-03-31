@@ -8,6 +8,7 @@ const problemRouter = require("./routes/problemCreator")
 const submitRouter = require("./routes/submit")
 const redisClient = require("./config/redis");
 const aiRouter = require("./routes/aiChatting")
+const videoRouter = require("./routes/videoCreator")
 // cors issue solution
 const cors = require("cors")
 
@@ -25,6 +26,7 @@ app.use("/user",authRouter)
 app.use("/problem",problemRouter) 
 app.use("/submission",submitRouter)
 app.use("/ai",aiRouter)
+app.use("/video",videoRouter)
 // we will connect to both mongodb and redis and then we listen to server
 
 const InitializeConnection = async ()=>{

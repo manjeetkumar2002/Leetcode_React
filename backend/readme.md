@@ -58,3 +58,9 @@ step4 : submiting a batch is a two steps process first we submit the batch and i
 #  npm i @google/genai
 
 # npm i cloudinary
+
+# flow of video upload
+1. frontend request for DigitalSignature from backend getDigitalSignature
+2. frontend save to video to cloudinary
+3. cloudinary send the meta data of video
+4. frontend request to beckend to save the metadata
