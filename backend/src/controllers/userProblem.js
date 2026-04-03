@@ -158,11 +158,13 @@ const getProblemById = async(req,res)=>{
       const videos = await SolutionVideo.find({problemId:id})
       // if videos exist ,you and also add the feature of paid user here => video&&userPaid
       if(videos){
-        getproblem.secureUrl = videos.secureUrl
-        getproblem.cloudinaryPublicId = videos.cloudinaryPublicId
-        getproblem.thumbnailUrl = videos.thumbnailUrl
-        getproblem.duration = videos.duration
-        return res.status(200).send(getproblem)
+        const responseData = {
+          ...getProblem.toObject(),
+          secureUrl:videos.secureUrl,
+          thumbnailUrl : videos.thumbnailUrl,
+          duration : videos.duration,
+        } 
+        return res.status(200).send(responseData)
       }
 
       res.status(200).send(getproblem)

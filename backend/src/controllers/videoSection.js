@@ -82,18 +82,20 @@ const saveVideoMetadata = async(req,res)=>{
         }  
         // you can create video thumbnailUrl on the go 
         // you can also create videoUrl using the same way
-        const thumbnailUrl = cloudinary.url(cloudinaryResource.public_id,{
-            resource_type:'image',
-            transformation:[
-                {width:400,height:225,crop:'fill'},
-                {quality:'auto'},
-                {start_offset:'auto'}
-            ],
-            format:'jpg'
-        })
+        // const thumbnailUrl = cloudinary.url(cloudinaryResource.public_id,{
+        //     resource_type:'image',
+        //     transformation:[
+        //         {width:400,height:225,crop:'fill'},
+        //         {quality:'auto'},
+        //         {start_offset:'auto'}
+        //     ],
+        //     format:'jpg'
+        // })
+
+        const thumbnailUrl = cloudinary.image(cloudinaryResource.public_id,{resource_type: "video"})
 
         // create video solution record
-        const videoSolution = new SolutionVideo({
+        const videoSolution = await SolutionVideo.create({
             problemId,
             userId,
             secureUrl,
@@ -104,10 +106,10 @@ const saveVideoMetadata = async(req,res)=>{
         res.status(201).json({
             message:"Video Solution Saved Successfull",
             videoSolution:{
-                id:SolutionVideo._id,
-                thumbnailUrl:SolutionVideo.thumbnailUrl,
-                duration:SolutionVideo.duration,
-                uploadedAt:SolutionVideo.createdAt
+                id:videoSolution._id,
+                thumbnailUrl:videoSolution.thumbnailUrl,
+                duration:videoSolution.duration,
+                uploadedAt:videoSolution.createdAt
             }
         })
     } catch (error) {
