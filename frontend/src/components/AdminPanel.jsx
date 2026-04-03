@@ -25,13 +25,13 @@ const problemSchema = z.object({
   ).min(1, 'At least one hidden test case required'),
   startCode: z.array(
     z.object({
-      language: z.enum(['c++', 'java', 'javascript']),
+      language: z.enum(['C++', 'Java', 'JavaScript']),
       initialCode: z.string().min(1, 'Initial code is required')
     })
   ).length(3, 'All three languages required'),
   referenceSolution: z.array(
     z.object({
-      language: z.enum(['c++', 'java', 'javascript']),
+      language: z.enum(['C++', 'Java', 'JavaScript']),
       completeCode: z.string().min(1, 'Complete code is required')
     })
   ).length(3, 'All three languages required')
@@ -48,14 +48,14 @@ function AdminPanel() {
     resolver: zodResolver(problemSchema),
     defaultValues: {
       startCode: [
-        { language: 'c++', initialCode: '' },
-        { language: 'java', initialCode: '' },
-        { language: 'javascript', initialCode: '' }
+        { language: 'C++', initialCode: '' },
+        { language: 'Java', initialCode: '' },
+        { language: 'JavaScript', initialCode: '' }
       ],
       referenceSolution: [
-        { language: 'c++', completeCode: '' },
-        { language: 'java', completeCode: '' },
-        { language: 'javascript', completeCode: '' }
+        { language: 'C++', completeCode: '' },
+        { language: 'Java', completeCode: '' },
+        { language: 'JavaScript', completeCode: '' }
       ]
     }
   });

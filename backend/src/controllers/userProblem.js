@@ -155,18 +155,17 @@ const getProblemById = async(req,res)=>{
       if(!getproblem){
         return res.status(404).send("Problem is Missing")
       }
-      const videos = await SolutionVideo.find({problemId:id})
+      const videos = await SolutionVideo.findOne({problemId:id})
       // if videos exist ,you and also add the feature of paid user here => video&&userPaid
       if(videos){
         const responseData = {
-          ...getProblem.toObject(),
+          ...getproblem.toObject(),
           secureUrl:videos.secureUrl,
           thumbnailUrl : videos.thumbnailUrl,
           duration : videos.duration,
         } 
         return res.status(200).send(responseData)
       }
-
       res.status(200).send(getproblem)
     } catch (err) {
       res.status(400).send("Error : "+err)

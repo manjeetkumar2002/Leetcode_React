@@ -7,7 +7,7 @@ const SolutionVideo = require("../models/solutionVideo")
 cloudinary.config({
     cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
     api_key:process.env.CLOUDINARY_API_KEY,
-    api_secret:CLOUDINARY_API_SECRET_KEY
+    api_secret:process.env.CLOUDINARY_API_SECRET_KEY
 })
 
 const generateUploadSignature = async(req,res)=>{
@@ -41,7 +41,7 @@ const generateUploadSignature = async(req,res)=>{
             public_id:publicId,
             api_key:process.env.CLOUDINARY_API_KEY,
             cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
-            upload_url:`https://api.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/video/upload`
+            upload_url:`https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/video/upload`
         })
 
     }
@@ -98,11 +98,11 @@ const saveVideoMetadata = async(req,res)=>{
         const videoSolution = await SolutionVideo.create({
             problemId,
             userId,
+            cloudinaryPublicId,
             secureUrl,
             duration:cloudinaryResource.duration || duration,
             thumbnailUrl
         })
-        await SolutionVideo.save()
         res.status(201).json({
             message:"Video Solution Saved Successfull",
             videoSolution:{

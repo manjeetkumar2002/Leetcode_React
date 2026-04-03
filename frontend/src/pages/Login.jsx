@@ -6,7 +6,7 @@ import { useNavigate, NavLink } from 'react-router';
 import { loginUser } from "../authSlice";
 import { useEffect, useState } from 'react';
 
-//zod validation
+
 const loginSchema = z.object({
   emailId: z.string().email("Invalid Email"),
   password: z.string().min(8, "Password is too weak") 
@@ -17,34 +17,32 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated, loading, error } = useSelector((state) => state.auth);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(loginSchema) });
-  // if already authenticated navigate to homepage
+  } = useForm({ resolver: zodResolver(loginSchema) }); // Using renamed schema
+
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/');
     }
   }, [isAuthenticated, navigate]);
-  // On submit login the user 
+
   const onSubmit = (data) => {
     dispatch(loginUser(data));
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-base-200"> 
+    <div className="min-h-screen flex items-center justify-center p-4 bg-base-200"> {/* Added bg for contrast */}
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
-          <h2 className="card-title justify-center text-3xl mb-6">Leetcode</h2>
+          <h2 className="card-title justify-center text-3xl mb-6">Leetcode</h2> {/* Added mb-6 */}
 
           
           <form onSubmit={handleSubmit(onSubmit)}>
-              {/* Email Field */}
-            <div className="form-control">
-              <label className="label"> 
+            <div className="form-control"> {/* Removed mt-4 from first form-control for tighter spacing to title or global error */}
+              <label className="label"> {/* Removed mb-1, default spacing should be fine */}
                 <span className="label-text">Email</span>
               </label>
               <input
@@ -57,7 +55,7 @@ function Login() {
                 <span className="text-error text-sm mt-1">{errors.emailId.message}</span>
               )}
             </div>
-            {/* Password Field */}
+
             <div className="form-control mt-4">
               <label className="label">
                 <span className="label-text">Password</span>
@@ -91,11 +89,11 @@ function Login() {
                 <span className="text-error text-sm mt-1">{errors.password.message}</span>
               )}
             </div>
-            {/* Submit Button Field */}
+
             <div className="form-control mt-8 flex justify-center">
               <button
                 type="submit"
-                className={`btn btn-primary ${loading ? 'loading btn-disabled' : ''}`} 
+                className={`btn btn-primary ${loading ? 'loading btn-disabled' : ''}`} // Added btn-disabled for better UX with loading
                 disabled={loading}
               >
                 {loading ? (
@@ -107,10 +105,9 @@ function Login() {
               </button>
             </div>
           </form>
-
           <div className="text-center mt-6">
             <span className="text-sm">
-              Don't have an account?{' '}
+              Don't have an account?{' '} {/* Adjusted text slightly */}
               <NavLink to="/signup" className="link link-primary">
                 Sign Up
               </NavLink>
