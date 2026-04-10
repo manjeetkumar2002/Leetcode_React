@@ -14,7 +14,8 @@ const {
   getProblemById,
   getAllProblem,
   solvedAllProblemByUser,
-  submittedProblem
+  submittedProblem,
+  fetchCompleteProblem
 } = require("../controllers/userProblem");
 const problemRouter = express.Router();
 
@@ -22,6 +23,7 @@ const problemRouter = express.Router();
 problemRouter.post("/create", adminMiddleware, createProblem);
 problemRouter.put("/update/:id", adminMiddleware, updateProblem);
 problemRouter.delete("/delete/:id", adminMiddleware, deleteProblem);
+problemRouter.get("/admin/:id",adminMiddleware,fetchCompleteProblem)
 // normal user routes
 problemRouter.get("/ProblemById/:id", userMiddleware, getProblemById);
 problemRouter.get("/getAllProblem", userMiddleware, getAllProblem);

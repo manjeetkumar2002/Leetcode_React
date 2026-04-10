@@ -17,7 +17,6 @@ const createProblem = async (req, res) => {
     problemCreator,
     referenceSolution,
   } = req.body;
-
   // we have to check reference solution is valid or not before storing it into db for all language
   // we have visibleTestCases and hiddenTestCases (input/output) // check karo isko judge0 ki help se 
 
@@ -59,6 +58,7 @@ const createProblem = async (req, res) => {
    })
     res.status(201).send("Problem Saved Successfully")
   } catch (err) {
+    console.log(err)
     res.status(400).send("Error : "+err)
   }
 }
@@ -115,10 +115,11 @@ const updateProblem = async (req,res)=>{
         }
     }
 
-    const newProblem = await Problem.findByIdAndUpdate(id,{...req.body},{runValidators:true,new:true}) // new:true help to return the newProblem
+    const newProblem = await Problem.findByIdAndUpdate(id,{...req.body},{runValidators:true, returnDocument: 'after'}) // new:true help to return the newProblem
 
     res.status(200).send(newProblem);
   } catch (err) {
+    console.log(err)
     res.status(500).send("Error : "+err)
   }
 }
@@ -228,5 +229,34 @@ const submittedProblem = async(req,res)=>{
        res.status(500).send("Error : "+err)
     }
 }
+const fetchCompleteProblem = async(req,res)=>{
+  // don't send the hiddenTestCases,referenceSolution,problemCreator,__v  of the problem to the user
+    const {id} = req.params
+    try {
+      if(!id){
+       return res.status(400).send("Id is Missing")
+      }
 
-module.exports =  {solvedAllProblemByUser,getAllProblem,createProblem,updateProblem,deleteProblem,getProblemById,submittedProblem}
+      const getproblem = await Problem.findById(id).select('_id title description difficulty tags visibleTestCases hiddenTestCases startCode referenceSolution')
+      // fetch the video solution of this problem and send to frontend
+      // we can fetch the video the problem id 
+      if(!getproblem){
+        return res.status(404).send("Problem is Missing")
+      }
+      const videos = await SolutionVideo.findOne({problemId:id})
+      // if videos exist ,you and also add the feature of paid user here => video&&userPaid
+      if(videos){
+        const responseData = {
+          ...getproblem.toObject(),
+          secureUrl:videos.secureUrl,
+          thumbnailUrl : videos.thumbnailUrl,
+          duration : videos.duration,
+        } 
+        return res.status(200).send(responseData)
+      }
+      res.status(200).send(getproblem)
+    } catch (err) {
+      res.status(400).send("Error : "+err)
+    }
+}
+module.exports =  {solvedAllProblemByUser,getAllProblem,createProblem,updateProblem,deleteProblem,getProblemById,submittedProblem,fetchCompleteProblem}

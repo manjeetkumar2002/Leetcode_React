@@ -43,6 +43,12 @@ const Editorial = ({ secureUrl, thumbnailUrl, duration }) => {
     }
   }, []);
 
+  if(!secureUrl){
+    return (
+      <h1>No video present</h1>
+    )
+  }
+
   return (
     <div 
       className="relative w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg"
